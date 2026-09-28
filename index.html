@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Nakshatra Communications — Make your brand heard</title>
+<meta name="description" content="Nakshatra Communications helps brands connect, engage and grow through strategic digital marketing and powerful communication." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Sora:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg-0:#05020f;
+    --bg-1:#0e0624;
+    --ink:#f7f0ff;
+    --ink-2:#cdbfe8;
+    --ink-3:#9384b8;
+    --accent:#b27bff;
+    --accent-2:#e0b3ff;
+    --line:rgba(200,160,255,.16);
+    --glass:rgba(34,14,62,.55);
+    --ease:cubic-bezier(.2,.9,.2,1);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:Inter,system-ui,sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(38vmax 28vmax at 50% 40%, rgba(120,50,220,.32), transparent 62%),
+      radial-gradient(34vmax 24vmax at 22% 30%, rgba(210,50,150,.20), transparent 60%),
+      radial-gradient(36vmax 26vmax at 80% 62%, rgba(20,160,200,.16), transparent 60%),
+      radial-gradient(30vmax 22vmax at 85% 12%, rgba(90,40,200,.18), transparent 60%),
+      linear-gradient(180deg,var(--bg-1) 0%,var(--bg-0) 100%);
+    overflow:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  /* faint grid, masked to the centre */
+  .grid{
+    position:fixed;inset:0;pointer-events:none;
+    background-image:
+      linear-gradient(rgba(190,140,255,.05) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(190,140,255,.05) 1px,transparent 1px);
+    background-size:64px 64px;
+    -webkit-mask-image:radial-gradient(ellipse 55% 50% at 50% 42%,#000 20%,transparent 75%);
+            mask-image:radial-gradient(ellipse 55% 50% at 50% 42%,#000 20%,transparent 75%);
+  }
+  .nebula{position:fixed;inset:-20%;pointer-events:none;mix-blend-mode:screen;opacity:.85;
+    background:
+      radial-gradient(22% 14% at 38% 44%, rgba(255,90,170,.22), transparent 70%),
+      radial-gradient(26% 12% at 60% 36%, rgba(150,80,255,.26), transparent 70%),
+      radial-gradient(18% 10% at 66% 54%, rgba(60,210,255,.16), transparent 70%),
+      radial-gradient(30% 9% at 50% 47%, rgba(255,210,240,.07), transparent 70%);
+    filter:blur(30px);transform:rotate(-18deg);animation:drift 60s ease-in-out infinite alternate}
+  @keyframes drift{from{transform:rotate(-18deg) translate(-2%,1%) scale(1)}to{transform:rotate(-12deg) translate(2%,-1%) scale(1.08)}}
+  #scene{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+  #scene.dragging{cursor:grabbing}
+  #scene.pointing{cursor:pointer}
+
+  /* planet horizon */
+  .planet{
+    position:fixed;left:50%;top:calc(100% - 15vh);
+    width:max(170vw,1500px);aspect-ratio:1;border-radius:50%;
+    transform:translateX(-50%);pointer-events:none;
+    background:radial-gradient(ellipse 60% 18% at 50% 0%,rgba(190,70,255,.38),transparent 70%),
+               radial-gradient(ellipse 30% 10% at 30% 1%,rgba(255,80,170,.25),transparent 70%),
+               radial-gradient(ellipse 30% 10% at 72% 1%,rgba(60,200,255,.18),transparent 70%),
+               linear-gradient(180deg,#240c48 0%,#10062a 6%,#05020f 20%);
+    box-shadow:
+      0 -1px 0 rgba(255,200,240,.8),
+      0 -8px 30px rgba(220,100,255,.45),
+      0 -40px 120px rgba(150,60,255,.35),
+      inset 0 2px 0 rgba(255,210,245,.55),
+      inset 0 30px 80px rgba(170,70,255,.3);
+    opacity:0;animation:rise 2.4s .3s var(--ease) forwards;
+  }
+  @keyframes rise{from{opacity:0;transform:translate(-50%,6vh)}to{opacity:1;transform:translate(-50%,0)}}
+
+  /* header */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:5;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:22px clamp(16px,4vw,48px);
+  }
+  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--ink)}
+  .brand svg{width:40px;height:40px;filter:drop-shadow(0 0 6px rgba(210,160,255,.6))}
+  .brand .wm{display:flex;flex-direction:column;line-height:1}
+  .brand .wm b{font-family:Sora,sans-serif;font-weight:400;letter-spacing:.28em;font-size:17px}
+  .brand .wm small{font-size:8.5px;letter-spacing:.42em;color:var(--ink-3);margin-top:6px}
+  .talk{
+    display:inline-flex;align-items:center;gap:10px;
+    padding:10px 16px 10px 20px;border-radius:999px;
+    border:1px solid rgba(230,200,255,.35);background:rgba(36,16,70,.35);
+    color:var(--ink);font:500 13px Inter,sans-serif;cursor:pointer;
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    transition:border-color .3s,background .3s,box-shadow .3s;
+  }
+  .talk:hover{border-color:rgba(235,205,255,.7);background:rgba(110,50,170,.35);box-shadow:0 0 24px rgba(170,100,255,.35)}
+  .talk svg{width:14px;height:14px}
+
+  /* bottom headline */
+  .hero-foot{
+    position:fixed;left:0;right:0;bottom:max(3.5vh,18px);z-index:3;
+    text-align:center;pointer-events:none;padding:0 16px;
+  }
+  .hero-foot .eyebrow{
+    font-size:10.5px;letter-spacing:.32em;color:var(--ink-3);text-transform:uppercase;
+    opacity:0;animation:fadeUp 1.2s 2.4s var(--ease) forwards;
+  }
+  .hero-foot h1{
+    font-family:Sora,sans-serif;font-weight:300;
+    font-size:clamp(26px,3.6vw,46px);letter-spacing:-.02em;margin-top:10px;
+    opacity:0;animation:fadeUp 1.2s 2.6s var(--ease) forwards;
+  }
+  .hero-foot h1 em{font-style:normal;background:linear-gradient(90deg,#ff9ad5,#b98cff 55%,#7fe3ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .hint{
+    display:inline-flex;align-items:center;gap:10px;margin-top:14px;
+    font-size:12.5px;color:var(--ink-2);
+    opacity:0;animation:fadeUp 1.2s 3s var(--ease) forwards;
+  }
+  .hint i{width:7px;height:7px;border-radius:50%;background:var(--accent-2);box-shadow:0 0 0 0 rgba(214,168,255,.7);animation:ping 2s infinite}
+  @keyframes ping{0%{box-shadow:0 0 0 0 rgba(214,168,255,.7)}80%,100%{box-shadow:0 0 0 10px rgba(214,168,255,0)}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+
+  /* star-point labels */
+  #labels{position:fixed;inset:0;pointer-events:none;z-index:4}
+  .tip{
+    position:absolute;left:0;top:0;pointer-events:auto;
+    display:inline-flex;align-items:center;gap:10px;white-space:nowrap;
+    padding:8px 16px 8px 8px;border-radius:999px;
+    border:1px solid rgba(210,170,255,.22);
+    background:rgba(26,12,52,.5);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    color:var(--ink);font:500 13.5px Inter,sans-serif;letter-spacing:.01em;
+    cursor:pointer;opacity:0;will-change:transform;
+    transition:opacity .8s var(--ease),border-color .3s,background .3s,box-shadow .3s;
+  }
+  .tip .n{
+    display:grid;place-items:center;width:26px;height:26px;border-radius:50%;
+    font:600 10px Inter,sans-serif;color:#f6e6ff;letter-spacing:.04em;
+    background:radial-gradient(circle at 35% 30%,#ff7ac8,#7a3cff);
+    box-shadow:0 0 14px rgba(170,100,255,.6);
+  }
+  .tip .arr{width:14px;height:14px;opacity:.55;transition:transform .3s var(--ease),opacity .3s}
+  .ready .tip{opacity:1;transition-delay:var(--d,0s),0s,0s,0s}
+  .tip:hover,.tip.hot,.tip:focus-visible{
+    border-color:rgba(240,210,255,.7);background:rgba(110,45,160,.55);
+    box-shadow:0 0 30px rgba(170,100,255,.45);outline:none;
+  }
+  .tip:hover .arr,.tip.hot .arr{opacity:1;transform:translateX(3px)}
+  .modal-open .tip{opacity:0 !important;pointer-events:none}
+
+  /* modal */
+  .modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;pointer-events:none;padding:16px}
+  .backdrop{
+    position:absolute;inset:0;background:rgba(8,3,20,.55);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    opacity:0;transition:opacity .5s var(--ease);
+  }
+  .panel{
+    position:relative;width:min(980px,100%);max-height:min(86vh,860px);
+    display:flex;flex-direction:column;
+    border-radius:28px;border:1px solid var(--line);
+    background:
+      radial-gradient(120% 60% at 50% 0%,rgba(170,80,255,.18),transparent 60%),
+      linear-gradient(180deg,rgba(30,14,58,.92),rgba(14,7,32,.95));
+    box-shadow:0 40px 120px rgba(0,0,0,.55),0 0 0 1px rgba(255,255,255,.03) inset,0 1px 0 rgba(235,205,255,.12) inset;
+    transform:translate(var(--ox,0),var(--oy,0)) scale(.08);
+    opacity:0;
+    transition:transform .75s var(--ease),opacity .45s var(--ease);
+    overflow:hidden;
+  }
+  .modal.open{pointer-events:auto}
+  .modal.open .backdrop{opacity:1}
+  .modal.open .panel{transform:none;opacity:1}
+
+  .panel-head{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:22px clamp(20px,4vw,44px) 0;
+  }
+  .crumb{display:flex;align-items:center;gap:10px;font-size:11px;letter-spacing:.3em;text-transform:uppercase;color:var(--ink-3)}
+  .crumb svg{width:16px;height:16px;color:var(--accent-2)}
+  .close{
+    width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;
+    border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--ink);cursor:pointer;
+    transition:background .3s,border-color .3s,transform .4s var(--ease);
+  }
+  .close:hover{background:rgba(170,100,255,.2);border-color:rgba(235,205,255,.5);transform:rotate(90deg)}
+  .close svg{width:18px;height:18px}
+  .close:focus-visible,.pn:focus-visible,.talk:focus-visible,.send:focus-visible{outline:2px solid var(--accent-2);outline-offset:3px}
+  .close:focus:not(:focus-visible){outline:none}
+
+  .panel-body{overflow:auto;padding:18px clamp(20px,4vw,44px) 8px;scrollbar-width:thin;scrollbar-color:rgba(190,120,255,.3) transparent}
+  .sec{display:none}
+  .sec.show{display:block;animation:secIn .6s var(--ease)}
+  @keyframes secIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  .sec h2{font-family:Sora,sans-serif;font-weight:300;font-size:clamp(28px,4vw,44px);line-height:1.1;letter-spacing:-.02em;max-width:18ch}
+  .sec h2 em{font-style:normal;color:var(--accent-2)}
+  .lede{color:var(--ink-2);font-size:clamp(15px,1.4vw,16.5px);line-height:1.7;margin-top:16px;max-width:62ch}
+  .two{display:grid;grid-template-columns:1.15fr .85fr;gap:clamp(20px,4vw,48px);align-items:start}
+  .two>*,.f{min-width:0}
+  input,select,textarea{width:100%}
+  .reach a,.reach div.r{overflow-wrap:anywhere}
+  h3{font-family:Sora,sans-serif;font-weight:500;font-size:16px;letter-spacing:-.005em}
+  p.s{color:var(--ink-3);font-size:14px;line-height:1.6;margin-top:6px}
+
+  .stats{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+  .stat{padding:18px;border-radius:18px;border:1px solid var(--line);background:rgba(255,255,255,.025)}
+  .stat b{display:block;font-family:Sora,sans-serif;font-weight:300;font-size:32px;letter-spacing:-.02em;background:linear-gradient(90deg,#fff,#ffb3e0 45%,#b98cff);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat span{font-size:12.5px;color:var(--ink-3)}
+
+  .pillars{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+  .card{
+    padding:20px;border-radius:20px;border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.035),rgba(255,255,255,.01));
+    transition:border-color .3s,transform .4s var(--ease),background .3s;
+  }
+  .card:hover{border-color:rgba(210,170,255,.4);transform:translateY(-3px);background:linear-gradient(180deg,rgba(170,100,255,.09),rgba(255,255,255,.01))}
+  .ico{
+    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;margin-bottom:14px;
+    background:radial-gradient(circle at 30% 25%,rgba(200,140,255,.35),rgba(120,50,200,.15));
+    border:1px solid rgba(210,170,255,.25);color:#f1dcff;
+  }
+  .ico svg{width:20px;height:20px}
+  .svc{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:28px}
+
+  .cases{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px}
+  .case .tag{display:inline-block;font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-2);padding:5px 10px;border-radius:999px;border:1px solid rgba(214,168,255,.25)}
+  .case h3{margin-top:14px}
+  .metric{margin-top:18px;padding-top:16px;border-top:1px solid var(--line);display:flex;gap:18px}
+  .metric b{display:block;font-family:Sora,sans-serif;font-weight:400;font-size:24px}
+  .metric span{font-size:11.5px;color:var(--ink-3)}
+  .note{font-size:12px;color:var(--ink-3);margin-top:14px}
+
+  .steps{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:30px;position:relative}
+  .step{position:relative;padding-top:34px}
+  .step::before{content:"";position:absolute;top:10px;left:0;right:-14px;height:1px;background:linear-gradient(90deg,rgba(214,168,255,.6),rgba(214,168,255,.1))}
+  .step:last-child::before{right:40%}
+  .step::after{content:"";position:absolute;top:5px;left:0;width:11px;height:11px;border-radius:50%;background:#f6e6ff;box-shadow:0 0 0 4px rgba(170,100,255,.25),0 0 16px rgba(200,140,255,.9)}
+  .step small{font-size:11px;letter-spacing:.24em;color:var(--accent-2)}
+  .step h3{margin-top:8px;font-size:19px;font-weight:400}
+
+  form{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .f{display:flex;flex-direction:column;gap:6px}
+  .f.full{grid-column:1/-1}
+  label{font-size:12px;color:var(--ink-3);letter-spacing:.02em}
+  input,select,textarea{
+    font:400 14.5px Inter,sans-serif;color:var(--ink);
+    padding:12px 14px;border-radius:12px;border:1px solid var(--line);
+    background:rgba(255,255,255,.035);outline:none;transition:border-color .3s,background .3s,box-shadow .3s;
+  }
+  select option{background:#150a2c}
+  textarea{resize:vertical;min-height:110px}
+  input:focus,select:focus,textarea:focus{border-color:rgba(214,168,255,.6);background:rgba(170,100,255,.07);box-shadow:0 0 0 4px rgba(170,100,255,.12)}
+  .send{
+    grid-column:1/-1;justify-self:start;display:inline-flex;align-items:center;gap:12px;
+    padding:8px 8px 8px 22px;border-radius:999px;border:0;cursor:pointer;
+    background:#fdf4ff;color:#2a0f4a;font:600 14px Inter,sans-serif;
+    box-shadow:0 0 30px rgba(190,120,255,.35);transition:transform .3s var(--ease),box-shadow .3s;
+  }
+  .send:hover{transform:translateY(-2px);box-shadow:0 0 44px rgba(190,120,255,.55)}
+  .send span{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#ff5fa8,#7a3cff);color:#fff}
+  .send svg{width:15px;height:15px}
+  .sent{display:none;padding:28px;border-radius:20px;border:1px solid rgba(214,168,255,.3);background:rgba(170,100,255,.08)}
+  .sent.show{display:block;animation:secIn .6s var(--ease)}
+  .reach{display:flex;flex-direction:column;gap:14px}
+  .reach a,.reach div.r{display:flex;gap:14px;align-items:center;color:var(--ink);text-decoration:none;padding:14px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.025);transition:border-color .3s}
+  .reach a:hover{border-color:rgba(214,168,255,.45)}
+  .reach .ico{margin:0;flex:none}
+  .reach small{display:block;font-size:11.5px;color:var(--ink-3);margin-bottom:2px}
+
+  .panel-foot{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:14px clamp(20px,4vw,44px) 20px;border-top:1px solid var(--line);margin-top:18px;
+  }
+  .pn{display:inline-flex;align-items:center;gap:8px;background:none;border:0;color:var(--ink-2);font:500 13px Inter,sans-serif;cursor:pointer;padding:8px 4px;transition:color .3s}
+  .pn:hover{color:#fff}
+  .pn svg{width:15px;height:15px}
+  .dots{display:flex;gap:8px}
+  .dots button{width:8px;height:8px;border-radius:50%;border:0;padding:0;background:rgba(214,168,255,.25);cursor:pointer;transition:background .3s,box-shadow .3s,transform .3s}
+  .dots button.on{background:#f7e6ff;box-shadow:0 0 10px rgba(214,168,255,.9);transform:scale(1.25)}
+
+  .fallback{display:none}
+  .no-webgl .fallback{display:flex;position:fixed;inset:0;align-items:center;justify-content:center;flex-wrap:wrap;gap:12px;padding:24px;z-index:4}
+  .no-webgl .fallback .tip{position:static;opacity:1}
+
+  @media (max-width:860px){
+    .two,.cases{grid-template-columns:1fr}
+    .svc{grid-template-columns:repeat(2,1fr)}
+    .steps{grid-template-columns:1fr 1fr;row-gap:26px}
+    .step::before{right:0}
+    .pillars{grid-template-columns:1fr}
+  }
+  @media (max-width:560px){
+    .brand .wm b{font-size:14px}
+    .brand svg{width:34px;height:34px}
+    .talk{padding:9px 12px 9px 14px;font-size:12px}
+    .tip{font-size:12px;padding:6px 12px 6px 6px;gap:8px}
+    .tip .n{width:22px;height:22px;font-size:9px}
+    .tip .arr{display:none}
+    .svc{grid-template-columns:1fr 1fr;gap:10px}
+    .svc .card{padding:16px}
+    form{grid-template-columns:1fr}
+    .panel{border-radius:22px;max-height:90vh}
+    .pn .lbl{display:none}
+    .hero-foot .eyebrow{display:none}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation-duration:.01ms !important;animation-delay:0s !important;transition-duration:.01ms !important}
+  }
+</style>
+</head>
+<body>
+<div class="nebula" aria-hidden="true"></div>
+<div class="grid" aria-hidden="true"></div>
+<canvas id="scene" aria-label="Interactive 3D constellation. Each point of the star opens a section."></canvas>
+<div class="planet" aria-hidden="true"></div>
+
+<header>
+  <a class="brand" href="#" aria-label="Nakshatra Communications home">
+    <svg viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <ellipse cx="20" cy="22" rx="18" ry="6" transform="rotate(-14 20 22)" stroke="rgba(210,170,255,.45)" stroke-width=".7"/>
+      <path d="M20 3L24.11 14.34 36.17 14.75 26.66 22.16 29.99 33.75 20 27 10.01 33.75 13.34 22.16 3.83 14.75 15.89 14.34Z" stroke="#f7e6ff" stroke-width="1.1" stroke-linejoin="round"/>
+      <g fill="#fff"><circle cx="36.17" cy="14.75" r="1.5"/><circle cx="29.99" cy="33.75" r="1.5"/><circle cx="10.01" cy="33.75" r="1.5"/><circle cx="3.83" cy="14.75" r="1.5"/><circle cx="20" cy="27" r="1"/></g>
+      <path d="M20 0l1.1 2.9L24 4l-2.9 1.1L20 8l-1.1-2.9L16 4l2.9-1.1Z" fill="#fff"/>
+    </svg>
+    <span class="wm"><b>NAKSHATRA</b><small>COMMUNICATIONS</small></span>
+  </a>
+  <button class="talk" data-open="4">Let’s Talk
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </button>
+</header>
+
+<div id="labels"></div>
+<div class="fallback" id="fallback"></div>
+
+<div class="hero-foot">
+  <div class="eyebrow">Digital Marketing &nbsp;×&nbsp; Brand Communication &nbsp;×&nbsp; Lead Generation</div>
+  <h1>Make your brand <em>heard.</em></h1>
+  <div class="hint"><i></i>Click a point of the star to explore</div>
+</div>
+
+<!-- ===================== MODAL ===================== -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="crumbName" aria-hidden="true">
+  <div class="backdrop" data-close></div>
+  <div class="panel" id="panel">
+    <div class="panel-head">
+      <div class="crumb">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.4 7.2H22l-6.2 4.5 2.4 7.3-6.2-4.5-6.2 4.5 2.4-7.3L2 9.2h7.6z"/></svg>
+        <span id="crumbNum">01</span> — <span id="crumbName">About Us</span>
+      </div>
+      <button class="close" data-close aria-label="Close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+
+    <div class="panel-body" id="panelBody">
+
+      <!-- ABOUT -->
+      <section class="sec" data-sec="0">
+        <div class="two">
+          <div>
+            <h2>We help brands find their place <em>in the sky.</em></h2>
+            <p class="lede">A <b>nakshatra</b> is a constellation — the star patterns ancient navigators used to find their way. We do the same for brands: map where your audience lives, chart the clearest route to them, and make sure that when you speak, you’re heard.</p>
+            <p class="lede">Nakshatra Communications is a digital marketing and brand communication studio. Strategists, storytellers, designers and performance marketers working as one team — from the first idea to the last conversion.</p>
+          </div>
+          <div class="stats">
+            <div class="stat"><b>120+</b><span>Campaigns launched</span></div>
+            <div class="stat"><b>45+</b><span>Brands partnered</span></div>
+            <div class="stat"><b>3.4×</b><span>Average return on ad spend</span></div>
+            <div class="stat"><b>18M+</b><span>People reached</span></div>
+          </div>
+        </div>
+        <div class="pillars">
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m16.24 7.76-2.12 6.36-6.36 2.12 2.12-6.36z"/></svg></div><h3>Strategy first</h3><p class="s">Every rupee is tied to a goal. We research before we create, and plan before we spend.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.9 5.8L20 10l-5 3.6L16.5 20 12 16.5 7.5 20 9 13.6 4 10l6.1-1.2z"/></svg></div><h3>Creative that converts</h3><p class="s">Ideas that stop the scroll — and move people to act, not just to like.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg></div><h3>Radically transparent</h3><p class="s">Clear dashboards, honest numbers and a team that picks up the phone.</p></div>
+        </div>
+      </section>
+
+      <!-- SERVICES -->
+      <section class="sec" data-sec="1">
+        <h2>A full range of services, <em>under one constellation.</em></h2>
+        <p class="lede">From strategy to execution, we bring digital, creative and communication expertise together to help your brand shine.</p>
+        <div class="svc">
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg></div><h3>Digital Marketing</h3><p class="s">Be visible where it matters — full-funnel plans across every channel.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><h3>Social Media</h3><p class="s">Build real connections with always-on content and community.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg></div><h3>Lead Generation</h3><p class="s">Turn interest into opportunity with funnels built to qualify.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg></div><h3>Content &amp; Creative</h3><p class="s">Films, design and copy — ideas that get noticed.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><h3>Branding</h3><p class="s">Naming, identity and voice. A stronger identity, always.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div><h3>SEO &amp; Performance</h3><p class="s">Rank higher, load faster and get found by people ready to buy.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg></div><h3>Paid Media</h3><p class="s">Meta, Google &amp; YouTube campaigns optimised for return.</p></div>
+          <div class="card"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div><h3>Web &amp; Design</h3><p class="s">Fast, beautiful websites and landing pages that convert.</p></div>
+        </div>
+      </section>
+
+      <!-- WORK -->
+      <section class="sec" data-sec="2">
+        <h2>Brands we’ve helped <em>shine brighter.</em></h2>
+        <p class="lede">A few recent journeys — each one charted from a clear goal to measurable growth.</p>
+        <div class="cases">
+          <div class="card case"><span class="tag">D2C · Skincare</span><h3>From launch to sold-out in 90 days</h3><p class="s">Influencer seeding, UGC-led creatives and a performance engine on Meta &amp; Google.</p><div class="metric"><div><b>4.1×</b><span>ROAS</span></div><div><b>62%</b><span>Lower CAC</span></div></div></div>
+          <div class="card case"><span class="tag">Real Estate</span><h3>A pipeline of qualified site visits</h3><p class="s">Hyper-local lead funnels, WhatsApp nurturing and CRM-integrated reporting.</p><div class="metric"><div><b>3,200+</b><span>Leads</span></div><div><b>38%</b><span>Visit rate</span></div></div></div>
+          <div class="card case"><span class="tag">EdTech</span><h3>Rebrand that doubled organic reach</h3><p class="s">New identity, content pillars and an SEO overhaul across 400+ pages.</p><div class="metric"><div><b>2.3×</b><span>Organic traffic</span></div><div><b>+140k</b><span>Followers</span></div></div></div>
+        </div>
+        <p class="note">Client names withheld at their request. Full case studies available on call.</p>
+      </section>
+
+      <!-- PROCESS -->
+      <section class="sec" data-sec="3">
+        <h2>How we chart <em>your course.</em></h2>
+        <p class="lede">Four clear stages — the same way a navigator reads the sky: observe, map, move, and keep adjusting.</p>
+        <div class="steps">
+          <div class="step"><small>01</small><h3>Observe</h3><p class="s">Audit your brand, audience, competitors and data to find where the real opportunity is.</p></div>
+          <div class="step"><small>02</small><h3>Map</h3><p class="s">A strategy, channel plan and creative direction — with KPIs agreed up front.</p></div>
+          <div class="step"><small>03</small><h3>Ignite</h3><p class="s">Launch campaigns, content and funnels. Fast, focused and on-brand.</p></div>
+          <div class="step"><small>04</small><h3>Expand</h3><p class="s">Test, learn and scale what works — with weekly reporting you can actually read.</p></div>
+        </div>
+      </section>
+
+      <!-- CONTACT -->
+      <section class="sec" data-sec="4">
+        <div class="two">
+          <div>
+            <h2>Let’s make your brand <em>heard.</em></h2>
+            <p class="lede" style="margin-bottom:22px">Tell us a little about where you want to go. We’ll reply within one working day.</p>
+            <form id="contactForm" novalidate>
+              <div class="f"><label for="fn">Name</label><input id="fn" name="name" required autocomplete="name" /></div>
+              <div class="f"><label for="fe">Email</label><input id="fe" name="email" type="email" required autocomplete="email" /></div>
+              <div class="f"><label for="fc">Company</label><input id="fc" name="company" autocomplete="organization" /></div>
+              <div class="f"><label for="fs">I’m interested in</label>
+                <select id="fs" name="service">
+                  <option>Digital Marketing</option><option>Social Media</option><option>Lead Generation</option>
+                  <option>Content &amp; Creative</option><option>Branding</option><option>SEO &amp; Performance</option>
+                  <option>Paid Media</option><option>Web &amp; Design</option><option>Not sure yet</option>
+                </select>
+              </div>
+              <div class="f full"><label for="fm">Message</label><textarea id="fm" name="message" placeholder="Your goals, timelines, budget…"></textarea></div>
+              <button class="send" type="submit">Start a Conversation <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></button>
+            </form>
+            <div class="sent" id="sent"><h3>Message received ✦</h3><p class="s">Thank you — our team will be in touch within one working day.</p></div>
+          </div>
+          <div class="reach">
+            <a href="mailto:hello@nakshatracommunications.com"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 6L2 7"/></svg></div><div><small>Email</small>hello@nakshatracommunications.com</div></a>
+            <a href="tel:+910000000000"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.4 1.8.7 2.7a2 2 0 0 1-.5 2.1L8 9.8a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.7.7a2 2 0 0 1 1.7 2z"/></svg></div><div><small>Phone</small>+91 00000 00000</div></a>
+            <div class="r"><div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></div><div><small>Studio</small>Mumbai, India</div></div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="panel-foot">
+      <button class="pn" id="prevBtn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 18l-6-6 6-6"/></svg><span class="lbl" id="prevLbl">Contact</span></button>
+      <div class="dots" id="dots"></div>
+      <button class="pn" id="nextBtn"><span class="lbl" id="nextLbl">Services</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
+  </div>
+</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+const SECTIONS = [
+  { id: 'about',    name: 'About Us' },
+  { id: 'services', name: 'Services' },
+  { id: 'work',     name: 'Our Work' },
+  { id: 'process',  name: 'Process' },
+  { id: 'contact',  name: 'Contact' },
+];
+const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const pad = i => String(i + 1).padStart(2, '0');
+const ARROW = '<svg class="arr" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+
+/* ---------- labels (HTML buttons, positioned over the 3D tips) ---------- */
+const labelsEl = document.getElementById('labels');
+const labels = SECTIONS.map((s, i) => {
+  const b = document.createElement('button');
+  b.className = 'tip';
+  b.style.setProperty('--d', (0.15 * i) + 's');
+  b.innerHTML = `<span class="n">${pad(i)}</span>${s.name}${ARROW}`;
+  b.addEventListener('click', () => openSection(i));
+  b.addEventListener('mouseenter', () => { labelHover = i; });
+  b.addEventListener('mouseleave', () => { labelHover = -1; });
+  labelsEl.appendChild(b);
+  return b;
+});
+let labelHover = -1;
+
+/* ---------- renderer ---------- */
+const canvas = document.getElementById('scene');
+let renderer;
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+} catch (e) {
+  document.body.classList.add('no-webgl');
+  const fb = document.getElementById('fallback');
+  SECTIONS.forEach((s, i) => {
+    const b = document.createElement('button');
+    b.className = 'tip';
+    b.innerHTML = `<span class="n">${pad(i)}</span>${s.name}`;
+    b.onclick = () => openSection(i);
+    fb.appendChild(b);
+  });
+}
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 200);
+let baseZ = 10;
+
+/* ---------- procedural textures ---------- */
+function canvasTex(size, draw) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  draw(c.getContext('2d'), size);
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace;
+  return t;
+}
+const glowTex = canvasTex(128, (g, s) => {
+  const r = g.createRadialGradient(s / 2, s / 2, 0, s / 2, s / 2, s / 2);
+  r.addColorStop(0, 'rgba(255,255,255,1)');
+  r.addColorStop(0.12, 'rgba(255,235,250,.9)');
+  r.addColorStop(0.35, 'rgba(255,255,255,.3)');
+  r.addColorStop(1, 'rgba(255,255,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, s, s);
+});
+const flareTex = canvasTex(256, (g, s) => {
+  const c = s / 2;
+  const r = g.createRadialGradient(c, c, 0, c, c, c * 0.35);
+  r.addColorStop(0, 'rgba(255,255,255,1)');
+  r.addColorStop(0.3, 'rgba(255,230,250,.7)');
+  r.addColorStop(1, 'rgba(200,140,255,0)');
+  g.fillStyle = r; g.fillRect(0, 0, s, s);
+  // 4-point sparkle rays
+  g.globalCompositeOperation = 'lighter';
+  [[1, 0.035], [0.55, 0.02]].forEach(([len, w], k) => {
+    for (let a = 0; a < 2; a++) {
+      g.save(); g.translate(c, c); g.rotate(a * Math.PI / 2 + k * Math.PI / 4);
+      const lg = g.createLinearGradient(-c * len, 0, c * len, 0);
+      lg.addColorStop(0, 'rgba(230,160,255,0)');
+      lg.addColorStop(0.5, 'rgba(255,255,255,.95)');
+      lg.addColorStop(1, 'rgba(230,160,255,0)');
+      g.fillStyle = lg;
+      g.beginPath();
+      g.moveTo(-c * len, 0); g.lineTo(0, -s * w); g.lineTo(c * len, 0); g.lineTo(0, s * w);
+      g.fill(); g.restore();
+    }
+  });
+});
+const ringTex = canvasTex(128, (g, s) => {
+  g.strokeStyle = 'rgba(255,255,255,1)'; g.lineWidth = 3;
+  g.shadowColor = 'rgba(255,255,255,1)'; g.shadowBlur = 8;
+  g.beginPath(); g.arc(s / 2, s / 2, s / 2 - 10, 0, Math.PI * 2); g.stroke();
+});
+
+const addMat = (opts) => new THREE.SpriteMaterial({ blending: THREE.AdditiveBlending, depthWrite: false, transparent: true, ...opts });
+
+/* ---------- constellation ---------- */
+const world = new THREE.Group();   // follows mouse / drag
+const star = new THREE.Group();    // the constellation itself
+world.add(star);
+scene.add(world);
+
+const R = 2.55, r = 1.02;
+// one nebula hue per point: pink, violet, cyan, magenta, indigo
+const HUES = [0xff8fd0, 0xa56bff, 0x5fd9ff, 0xff5fa8, 0x8c7dff].map(c => new THREE.Color(c));
+const zo = [0.18, -0.22, 0.28, -0.12, -0.26];
+const zi = [-0.32, 0.22, -0.16, 0.34, 0.1];
+const outer = [], inner = [];
+for (let i = 0; i < 5; i++) {
+  const a = Math.PI / 2 - i * (Math.PI * 2 / 5);
+  outer.push(new THREE.Vector3(Math.cos(a) * R, Math.sin(a) * R, zo[i]));
+  const b = a - Math.PI / 5;
+  inner.push(new THREE.Vector3(Math.cos(b) * r, Math.sin(b) * r, zi[i]));
+}
+const center = new THREE.Vector3(0, 0, 0.05);
+
+// edges: [a, b, tipIndex|-1, strength]
+const edges = [];
+for (let i = 0; i < 5; i++) {
+  edges.push([outer[i], inner[i], i, 1]);
+  edges.push([inner[i], outer[(i + 1) % 5], (i + 1) % 5, 1]);
+}
+for (let i = 0; i < 5; i++) edges.push([inner[i], inner[(i + 1) % 5], -1, 0.55]);
+for (let i = 0; i < 5; i++) edges.push([center, inner[i], -1, 0.35]);
+// a few stray constellation threads for an organic feel
+const strays = [
+  new THREE.Vector3(3.5, 1.55, -0.6), new THREE.Vector3(-3.4, -1.2, -0.4),
+  new THREE.Vector3(1.2, -3.05, 0.3), new THREE.Vector3(-1.6, 2.7, -0.5),
+];
+edges.push([outer[1], strays[0], -1, 0.3]);
+edges.push([outer[3], strays[1], -1, 0.3]);
+edges.push([outer[2], strays[2], -1, 0.25]);
+edges.push([outer[4], strays[3], -1, 0.25]);
+
+const UP = new THREE.Vector3(0, 1, 0);
+const cyl = new THREE.CylinderGeometry(1, 1, 1, 10, 1, true);
+const beams = edges.map(([a, b, tip, k], idx) => {
+  const dir = b.clone().sub(a);
+  const len = dir.length();
+  dir.normalize();
+  const q = new THREE.Quaternion().setFromUnitVectors(UP, dir);
+  const mk = (rad, color, op) => {
+    const m = new THREE.Mesh(cyl, new THREE.MeshBasicMaterial({
+      color, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false,
+    }));
+    m.quaternion.copy(q);
+    m.userData.rad = rad;
+    star.add(m);
+    return m;
+  };
+  return {
+    a, b, dir, len, tip, k,
+    core: mk(0.011 * (0.6 + 0.4 * k), 0xfbeaff, 0),
+    glow: mk(0.05 * (0.6 + 0.4 * k), tip >= 0 ? HUES[tip] : 0x8a5cff, 0),
+    delay: (tip >= 0 ? 0.2 + idx * 0.07 : 0.9 + idx * 0.04),
+    hot: 0,
+  };
+});
+function placeBeam(m, a, dir, len, p) {
+  const l = Math.max(len * p, 1e-4);
+  m.scale.set(m.userData.rad, l, m.userData.rad);
+  m.position.copy(a).addScaledVector(dir, l / 2);
+}
+
+// small nodes (inner vertices, centre, strays)
+const smallNodes = [...inner, ...strays].map((p, i) => {
+  const s = new THREE.Sprite(addMat({ map: glowTex, color: [0xd08cff, 0xff9ad5, 0x7fe3ff][i % 3], opacity: 0 }));
+  const sz = i < 5 ? 0.42 : 0.26;
+  s.position.copy(p); s.scale.setScalar(sz);
+  s.userData = { sz, phase: Math.random() * 6 };
+  star.add(s);
+  return s;
+});
+const core = new THREE.Sprite(addMat({ map: flareTex, color: 0xffe9f7, opacity: 0 }));
+core.position.copy(center); core.scale.setScalar(1.1);
+star.add(core);
+
+// tips — the clickable points
+const hitGeo = new THREE.SphereGeometry(0.55, 12, 12);
+const hitMat = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, colorWrite: false });
+const tips = outer.map((p, i) => {
+  const g = new THREE.Group();
+  g.position.copy(p);
+  const glow = new THREE.Sprite(addMat({ map: glowTex, color: HUES[i], opacity: 0 }));
+  glow.scale.setScalar(1.1);
+  const flare = new THREE.Sprite(addMat({ map: flareTex, color: 0xffffff, opacity: 0 }));
+  flare.scale.setScalar(i === 0 ? 1.25 : 0.95);
+  const ring = new THREE.Sprite(addMat({ map: ringTex, color: HUES[i].clone().lerp(new THREE.Color(0xffffff), 0.35), opacity: 0 }));
+  const hit = new THREE.Mesh(hitGeo, hitMat);
+  hit.userData.tip = i;
+  g.add(glow, flare, ring, hit);
+  star.add(g);
+  return { g, glow, flare, ring, hit, hot: 0, screen: { x: 0, y: 0 } };
+});
+const hitTargets = tips.map(t => t.hit);
+
+// travelling light pulses along the lines
+const pulses = Array.from({ length: 12 }, () => {
+  const s = new THREE.Sprite(addMat({ map: glowTex, color: 0xfff0fb, opacity: 0 }));
+  s.scale.setScalar(0.22);
+  star.add(s);
+  const p = { s, e: 0, t: Math.random(), v: 0.25 + Math.random() * 0.35 };
+  p.e = Math.floor(Math.random() * 20);
+  return p;
+});
+
+/* ---------- orbits ---------- */
+const orbits = [];
+function addOrbit(rx, ry, rotX, rotZ, op, speed, moons) {
+  const pivot = new THREE.Group();
+  pivot.rotation.set(rotX, 0, rotZ);
+  const spin = new THREE.Group();
+  pivot.add(spin);
+  const pts = new THREE.EllipseCurve(0, 0, rx, ry).getPoints(240).map(v => new THREE.Vector3(v.x, v.y, 0));
+  const line = new THREE.Line(
+    new THREE.BufferGeometry().setFromPoints(pts),
+    new THREE.LineBasicMaterial({ color: 0xb07cff, transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false })
+  );
+  line.userData.op = op;
+  spin.add(line);
+  const ms = [];
+  for (let m = 0; m < moons; m++) {
+    const s = new THREE.Sprite(addMat({ map: glowTex, color: m % 2 ? 0x7fe3ff : 0xff8fd0, opacity: 0 }));
+    s.scale.setScalar(0.3);
+    spin.add(s);
+    ms.push({ s, a: Math.random() * Math.PI * 2, v: (0.08 + Math.random() * 0.08) * (m % 2 ? 1 : -1) });
+  }
+  world.add(pivot);
+  orbits.push({ pivot, spin, line, rx, ry, speed, moons: ms });
+}
+addOrbit(3.9, 1.5, 1.2, 0.22, 0.28, 0.02, 2);
+addOrbit(4.6, 2.0, 1.05, -0.38, 0.16, -0.012, 1);
+addOrbit(3.2, 3.2, 1.45, 0.0, 0.08, 0.008, 0);
+
+/* ---------- twinkling star field + dust ---------- */
+const starVS = `
+  attribute float aSize; attribute float aPhase; attribute vec3 aColor;
+  uniform float uTime; uniform float uPR; uniform float uFade;
+  varying float vA; varying vec3 vC;
+  void main(){
+    vec4 mv = modelViewMatrix * vec4(position,1.0);
+    float tw = 0.55 + 0.45 * sin(uTime * (0.8 + fract(aPhase) * 1.8) + aPhase * 6.2831);
+    vA = tw * uFade; vC = aColor;
+    gl_PointSize = aSize * uPR * (0.75 + 0.25 * tw) * (26.0 / -mv.z);
+    gl_Position = projectionMatrix * mv;
+  }`;
+const starFS = `
+  varying float vA; varying vec3 vC;
+  void main(){
+    float d = length(gl_PointCoord - 0.5);
+    float a = smoothstep(0.5, 0.0, d);
+    a = a * a;
+    gl_FragColor = vec4(vC, a * vA);
+  }`;
+function makeField(n, spread) {
+  const pos = new Float32Array(n * 3), size = new Float32Array(n), ph = new Float32Array(n), col = new Float32Array(n * 3);
+  const palette = [[1, 1, 1], [1, 0.95, 0.88], [1, 0.72, 0.9], [0.8, 0.66, 1], [0.6, 0.9, 1], [0.86, 0.78, 1]];
+  for (let i = 0; i < n; i++) {
+    spread(pos, i);
+    size[i] = Math.random() < 0.06 ? 3 + Math.random() * 3 : 0.8 + Math.random() * 1.8;
+    ph[i] = Math.random() * 10;
+    const c = palette[(Math.random() * palette.length) | 0];
+    col.set(c, i * 3);
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  g.setAttribute('aSize', new THREE.BufferAttribute(size, 1));
+  g.setAttribute('aPhase', new THREE.BufferAttribute(ph, 1));
+  g.setAttribute('aColor', new THREE.BufferAttribute(col, 3));
+  const m = new THREE.ShaderMaterial({
+    vertexShader: starVS, fragmentShader: starFS, transparent: true, depthWrite: false,
+    blending: THREE.AdditiveBlending,
+    uniforms: { uTime: { value: 0 }, uPR: { value: Math.min(devicePixelRatio, 2) }, uFade: { value: 0 } },
+  });
+  return new THREE.Points(g, m);
+}
+const sky = makeField(2200, (p, i) => {
+  p[i * 3] = (Math.random() - 0.5) * 110;
+  p[i * 3 + 1] = (Math.random() - 0.5) * 70;
+  p[i * 3 + 2] = -12 - Math.random() * 50;
+});
+scene.add(sky);
+const dust = makeField(260, (p, i) => {
+  const v = new THREE.Vector3().randomDirection().multiplyScalar(2 + Math.random() * 3.5);
+  v.z *= 0.5;
+  p.set([v.x, v.y, v.z], i * 3);
+});
+dust.material.uniforms.uFade.value = 0;
+world.add(dust);
+
+/* ---------- sizing ---------- */
+function resize() {
+  const w = innerWidth, h = innerHeight;
+  camera.aspect = w / h;
+  const halfW = camera.aspect < 0.8 ? 3.7 : 4.2, halfH = 5.4; // world units that must remain visible (star + labels + header/footer room)
+  const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  baseZ = Math.max(halfH / t, halfW / (t * camera.aspect));
+  camera.updateProjectionMatrix();
+  if (renderer) {
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(w, h, false);
+  }
+  // lift the star so it sits above the horizon + headline
+  world.position.y = camera.aspect < 0.8 ? 0.9 : 0.75;
+}
+resize();
+camera.position.set(0, 0, baseZ + 4);
+addEventListener('resize', resize);
+
+/* ---------- interaction ---------- */
+const pointer = new THREE.Vector2(0, 0);   // -1..1
+const ndc = new THREE.Vector2(9, 9);
+const ray = new THREE.Raycaster();
+let hovered = -1, dragging = false, downX = 0, downY = 0, lastX = 0, moved = 0;
+let dragRot = 0, dragVel = 0, pointerInside = false;
+
+canvas.addEventListener('pointerdown', e => {
+  dragging = true; moved = 0; downX = lastX = e.clientX; downY = e.clientY;
+  canvas.setPointerCapture(e.pointerId);
+});
+canvas.addEventListener('pointermove', e => {
+  pointerInside = true;
+  pointer.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight * 2 - 1));
+  ndc.copy(pointer);
+  if (dragging) {
+    const dx = e.clientX - lastX;
+    lastX = e.clientX;
+    moved = Math.max(moved, Math.hypot(e.clientX - downX, e.clientY - downY));
+    if (moved > 4) { dragVel = dx * 0.006; dragRot += dragVel; canvas.classList.add('dragging'); }
+  }
+});
+canvas.addEventListener('pointerup', e => {
+  canvas.classList.remove('dragging');
+  dragging = false;
+  if (moved <= 6) {
+    ndc.set(e.clientX / innerWidth * 2 - 1, -(e.clientY / innerHeight * 2 - 1));
+    const i = pick();
+    if (i >= 0) openSection(i);
+  }
+});
+canvas.addEventListener('pointerleave', () => { pointerInside = false; ndc.set(9, 9); });
+
+function pick() {
+  if (!introDone) return -1;
+  ray.setFromCamera(ndc, camera);
+  const hit = ray.intersectObjects(hitTargets, false)[0];
+  return hit ? hit.object.userData.tip : -1;
+}
+
+/* ---------- modal ---------- */
+const modal = document.getElementById('modal');
+const panel = document.getElementById('panel');
+const secs = [...document.querySelectorAll('.sec')];
+const dotsEl = document.getElementById('dots');
+const dots = SECTIONS.map((s, i) => {
+  const d = document.createElement('button');
+  d.setAttribute('aria-label', s.name);
+  d.onclick = () => openSection(i);
+  dotsEl.appendChild(d);
+  return d;
+});
+let current = -1, lastFocus = null;
+
+function setOrigin(i) {
+  const s = tips[i]?.screen;
+  if (!s || !renderer) { panel.style.setProperty('--ox', '0px'); panel.style.setProperty('--oy', '0px'); return; }
+  panel.style.setProperty('--ox', (s.x - innerWidth / 2) + 'px');
+  panel.style.setProperty('--oy', (s.y - innerHeight / 2) + 'px');
+}
+
+function openSection(i) {
+  const wasOpen = modal.classList.contains('open');
+  current = i;
+  secs.forEach((s, k) => s.classList.toggle('show', k === i));
+  dots.forEach((d, k) => d.classList.toggle('on', k === i));
+  document.getElementById('crumbNum').textContent = pad(i);
+  document.getElementById('crumbName').textContent = SECTIONS[i].name;
+  document.getElementById('prevLbl').textContent = SECTIONS[(i + 4) % 5].name;
+  document.getElementById('nextLbl').textContent = SECTIONS[(i + 1) % 5].name;
+  document.getElementById('panelBody').scrollTop = 0;
+  history.replaceState(null, '', '#' + SECTIONS[i].id);
+  if (!wasOpen) {
+    lastFocus = document.activeElement;
+    setOrigin(i);
+    panel.getBoundingClientRect(); // commit start transform before animating
+    modal.classList.add('open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('modal-open');
+    setTimeout(() => modal.querySelector('.close').focus({ preventScroll: true }), 50);
+  }
+}
+function closeSection() {
+  if (!modal.classList.contains('open')) return;
+  setOrigin(current);
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('modal-open');
+  history.replaceState(null, '', location.pathname + location.search);
+  const i = current;
+  current = -1;
+  (lastFocus && lastFocus.focus) ? lastFocus.focus({ preventScroll: true }) : labels[i]?.focus({ preventScroll: true });
+}
+modal.querySelectorAll('[data-close]').forEach(el => el.addEventListener('click', closeSection));
+document.querySelectorAll('[data-open]').forEach(el => el.addEventListener('click', () => openSection(+el.dataset.open)));
+document.getElementById('prevBtn').onclick = () => openSection((current + 4) % 5);
+document.getElementById('nextBtn').onclick = () => openSection((current + 1) % 5);
+addEventListener('keydown', e => {
+  if (!modal.classList.contains('open')) return;
+  if (e.key === 'Escape') closeSection();
+  const typing = /INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName);
+  if (!typing && e.key === 'ArrowRight') openSection((current + 1) % 5);
+  if (!typing && e.key === 'ArrowLeft') openSection((current + 4) % 5);
+  if (e.key === 'Tab') { // keep focus inside the dialog
+    const f = [...panel.querySelectorAll('button,input,select,textarea,a[href]')].filter(el => el.offsetParent);
+    if (!f.length) return;
+    if (e.shiftKey && document.activeElement === f[0]) { e.preventDefault(); f.at(-1).focus(); }
+    else if (!e.shiftKey && document.activeElement === f.at(-1)) { e.preventDefault(); f[0].focus(); }
+  }
+});
+
+// contact form (front-end only — hook up to your backend / form service)
+const form = document.getElementById('contactForm');
+form.addEventListener('submit', e => {
+  e.preventDefault();
+  const { name: nameEl, email: emailEl } = form.elements;
+  if (!nameEl.value.trim()) return nameEl.focus();
+  if (!/^\S+@\S+\.\S+$/.test(emailEl.value.trim())) return emailEl.focus();
+  form.style.display = 'none';
+  document.getElementById('sent').classList.add('show');
+});
+
+/* ---------- animation loop ---------- */
+const clock = new THREE.Clock();
+const tmp = new THREE.Vector3(), cScreen = new THREE.Vector3();
+let introDone = false;
+const INTRO = reduceMotion ? 0.01 : 2.4;
+const ease = x => 1 - Math.pow(1 - Math.min(Math.max(x, 0), 1), 3);
+const lerp = THREE.MathUtils.lerp;
+
+function frame() {
+  const dt = Math.min(clock.getDelta(), 0.05);
+  const t = clock.elapsedTime;
+  const it = reduceMotion ? 99 : t; // intro time
+
+  if (!introDone && it > INTRO) { introDone = true; document.body.classList.add('ready'); }
+
+  // hover detection (3D tip or HTML label)
+  let h = labelHover;
+  if (h < 0 && pointerInside && !dragging && current < 0) h = pick();
+  if (h !== hovered) {
+    hovered = h;
+    labels.forEach((l, k) => l.classList.toggle('hot', k === h));
+    canvas.classList.toggle('pointing', h >= 0);
+  }
+
+  // camera: slow dolly-in on load, gentle parallax, push toward the chosen tip when open
+  const open = current >= 0;
+  const focusTip = open ? outer[current] : null;
+  const tx = open ? focusTip.x * 0.25 : pointer.x * 0.35;
+  const ty = open ? focusTip.y * 0.25 + world.position.y : pointer.y * 0.25;
+  const tz = open ? baseZ * 0.82 : baseZ;
+  const k = 1 - Math.pow(0.02, dt);
+  camera.position.x = lerp(camera.position.x, tx, k);
+  camera.position.y = lerp(camera.position.y, ty, k);
+  camera.position.z = lerp(camera.position.z, tz, reduceMotion ? 1 : k * 0.9);
+  camera.lookAt(0, open ? ty * 0.6 : world.position.y * 0.3, 0);
+
+  // drag inertia, springing back to the readable front view
+  if (!dragging) { dragRot += dragVel; dragVel *= 0.93; dragRot *= 0.975; }
+  const sway = reduceMotion ? 0 : Math.sin(t * 0.22) * 0.16;
+  world.rotation.y = lerp(world.rotation.y, sway + dragRot + pointer.x * 0.18, 0.08);
+  world.rotation.x = lerp(world.rotation.x, -pointer.y * 0.12 + (reduceMotion ? 0 : Math.cos(t * 0.18) * 0.04), 0.08);
+  star.position.y = reduceMotion ? 0 : Math.sin(t * 0.6) * 0.06;
+  const introS = 0.75 + 0.25 * ease(it / INTRO);
+  star.scale.setScalar(introS);
+
+  // beams draw in, brighten near hovered/opened tip
+  const active = open ? current : hovered;
+  for (const b of beams) {
+    const p = ease((it - b.delay) / 0.7);
+    placeBeam(b.core, b.a, b.dir, b.len, p);
+    placeBeam(b.glow, b.a, b.dir, b.len, p);
+    const target = (active >= 0 && b.tip === active) ? 1 : 0;
+    b.hot = lerp(b.hot, target, 0.12);
+    const dim = active >= 0 && b.tip !== active ? 0.75 : 1;
+    b.core.material.opacity = Math.min(p * 3, 1) * (0.55 + 0.35 * b.k + 0.4 * b.hot) * dim;
+    b.glow.material.opacity = Math.min(p * 3, 1) * (0.1 + 0.08 * b.k + 0.22 * b.hot) * dim;
+  }
+  const nodesIn = ease((it - 0.6) / 1.2);
+  smallNodes.forEach(s => {
+    s.material.opacity = nodesIn * (0.55 + 0.45 * Math.sin(t * 1.6 + s.userData.phase));
+  });
+  core.material.opacity = nodesIn * (0.8 + 0.2 * Math.sin(t * 2.1));
+  core.material.rotation = t * 0.08;
+
+  // tips
+  tips.forEach((tp, i) => {
+    const on = ease((it - 0.4 - i * 0.12) / 0.9);
+    const target = active === i ? 1 : 0;
+    tp.hot = lerp(tp.hot, target, 0.14);
+    const breathe = 1 + Math.sin(t * 1.8 + i) * 0.06;
+    tp.glow.material.opacity = on * (0.75 + 0.25 * tp.hot);
+    tp.glow.scale.setScalar((1.1 + tp.hot * 0.5) * breathe);
+    tp.flare.material.opacity = on;
+    tp.flare.material.rotation = Math.sin(t * 0.5 + i) * 0.15;
+    tp.flare.scale.setScalar(((i === 0 ? 1.25 : 0.95) + tp.hot * 0.45) * breathe);
+    // "click me" ripple ring
+    const cyc = ((t * 0.55 + i * 0.2) % 1);
+    tp.ring.scale.setScalar(0.5 + cyc * 1.1 + tp.hot * 0.3);
+    tp.ring.material.opacity = introDone ? (1 - cyc) * (0.55 + tp.hot * 0.45) : 0;
+  });
+
+  // pulses
+  for (const p of pulses) {
+    p.t += dt * p.v;
+    if (p.t >= 1) { p.t = 0; p.e = Math.floor(Math.random() * 20); p.v = 0.25 + Math.random() * 0.35; }
+    const b = beams[p.e];
+    p.s.position.copy(b.a).addScaledVector(b.dir, b.len * p.t);
+    p.s.material.opacity = introDone ? Math.sin(Math.PI * p.t) * 0.9 : 0;
+  }
+
+  // orbits
+  const orbIn = ease((it - 1.0) / 1.6);
+  for (const o of orbits) {
+    o.spin.rotation.z += dt * o.speed;
+    o.line.material.opacity = orbIn * o.line.userData.op;
+    for (const m of o.moons) {
+      m.a += dt * m.v;
+      m.s.position.set(Math.cos(m.a) * o.rx, Math.sin(m.a) * o.ry, 0);
+      m.s.material.opacity = orbIn * 0.85;
+    }
+  }
+
+  // star field
+  sky.material.uniforms.uTime.value = t;
+  sky.material.uniforms.uFade.value = ease(it / 2);
+  sky.position.x = lerp(sky.position.x, -pointer.x * 1.2, 0.03);
+  sky.position.y = lerp(sky.position.y, -pointer.y * 0.8, 0.03);
+  dust.material.uniforms.uTime.value = t;
+  dust.material.uniforms.uFade.value = orbIn * 0.7;
+  dust.rotation.y = t * 0.02;
+
+  renderer.render(scene, camera);
+
+  // project tips to screen and place the HTML labels just outside each point
+  world.updateMatrixWorld();
+  star.getWorldPosition(cScreen).project(camera);
+  const cx = (cScreen.x * 0.5 + 0.5) * innerWidth, cy = (-cScreen.y * 0.5 + 0.5) * innerHeight;
+  const gap = innerWidth < 560 ? 26 : 38;
+  tips.forEach((tp, i) => {
+    tp.g.getWorldPosition(tmp).project(camera);
+    const x = (tmp.x * 0.5 + 0.5) * innerWidth, y = (-tmp.y * 0.5 + 0.5) * innerHeight;
+    tp.screen.x = x; tp.screen.y = y;
+    let dx = x - cx, dy = y - cy;
+    const L = Math.hypot(dx, dy) || 1; dx /= L; dy /= L;
+    const el = labels[i];
+    const w = el.offsetWidth, hgt = el.offsetHeight;
+    let left, top;
+    if (innerWidth < 640) {
+      // narrow screens: stack labels above/below their point so they never run off the edge
+      left = x - w / 2;
+      top = dy < 0 ? y - gap * 0.7 - hgt : y + gap * 0.7;
+    } else {
+      const lx = x + dx * gap, ly = y + dy * gap;
+      left = lx + (dx > 0.3 ? 0 : dx < -0.3 ? -w : -w / 2);
+      top = ly + (dy < -0.8 ? -hgt : dy > 0.8 ? 0 : -hgt / 2);
+    }
+    left = Math.min(Math.max(left, 12), innerWidth - 12 - w);
+    el.style.transform = `translate3d(${left.toFixed(1)}px,${top.toFixed(1)}px,0)`;
+  });
+
+  requestAnimationFrame(frame);
+}
+if (renderer) requestAnimationFrame(frame);
+
+// deep link: /#services opens that section after the intro
+const fromHash = SECTIONS.findIndex(s => '#' + s.id === location.hash);
+if (fromHash >= 0) setTimeout(() => openSection(fromHash), renderer ? INTRO * 1000 + 300 : 0);
+</script>
+</body>
+</html>
