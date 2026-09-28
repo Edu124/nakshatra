@@ -755,6 +755,7 @@ world.add(dust);
 /* ---------- sizing ---------- */
 function resize() {
   const w = innerWidth, h = innerHeight;
+  if (!w || !h) return; // page opened hidden / zero-size — wait for a real resize
   camera.aspect = w / h;
   const halfW = camera.aspect < 0.8 ? 3.7 : 4.2, halfH = 5.4; // world units that must remain visible (star + labels + header/footer room)
   const t = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
@@ -923,6 +924,8 @@ function frame() {
   const tx = open ? focusTip.x * 0.25 : pointer.x * 0.35;
   const ty = open ? focusTip.y * 0.25 + world.position.y : pointer.y * 0.25;
   const tz = open ? baseZ * 0.82 : baseZ;
+  if (!Number.isFinite(camera.position.z)) camera.position.set(0, 0, baseZ + 4); // recover if ever corrupted
+  if (innerWidth && innerHeight && !(Math.abs(camera.aspect - innerWidth / innerHeight) <= 1e-3)) resize();
   const k = 1 - Math.pow(0.02, dt);
   camera.position.x = lerp(camera.position.x, tx, k);
   camera.position.y = lerp(camera.position.y, ty, k);
