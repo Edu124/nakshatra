@@ -71,7 +71,7 @@
 
   /* ---------- home: planet + headline ---------- */
   .planet{
-    position:fixed;left:50%;top:calc(100% - 15vh);
+    position:fixed;left:50%;top:calc(100% - var(--horizon,15vh));
     width:max(170vw,1500px);aspect-ratio:1;border-radius:50%;
     transform:translateX(-50%);pointer-events:none;
     background:radial-gradient(ellipse 60% 18% at 50% 0%,rgba(190,70,255,.38),transparent 70%),
@@ -1089,6 +1089,17 @@ function resize() {
 resize();
 camera.position.set(0, 0, baseZ + 4);
 addEventListener('resize', resize);
+
+// keep the planet's glowing rim just above the headline block, never through it
+const heroFoot = document.querySelector('.hero-foot');
+function placeHorizon() {
+  if (!innerHeight) return;
+  const gap = innerWidth < 560 ? 16 : 22;
+  document.documentElement.style.setProperty('--horizon', (innerHeight - heroFoot.offsetTop + gap) + 'px');
+}
+placeHorizon();
+addEventListener('resize', placeHorizon);
+document.fonts?.ready.then(placeHorizon);
 
 /* ---------- home interaction ---------- */
 const pointer = new THREE.Vector2(0, 0);
