@@ -949,6 +949,7 @@ try {
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(42, (innerWidth || 1) / (innerHeight || 1), 0.05, 200);
 scene.add(camera);
+const coarse = matchMedia('(pointer: coarse)').matches;
 let baseZ = 10, worldBaseY = 0.75;
 
 /* ---------- procedural textures ---------- */
@@ -1246,7 +1247,7 @@ function resize() {
   baseZ = Math.max(halfH / t, halfW / (t * camera.aspect));
   camera.updateProjectionMatrix();
   if (renderer) {
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setPixelRatio(Math.min(devicePixelRatio, coarse ? 1.5 : 2));
     renderer.setSize(w, h, false);
   }
   worldBaseY = camera.aspect < 0.8 ? 1.35 : 1.35;
@@ -1328,13 +1329,15 @@ const layersOf = i => [...rooms[i].querySelectorAll('.layer')];
 
 /* =====================================================================
    GALAXY SOUND — generated live with the Web Audio API (no audio files).
-   Plays from the visitor's first tap/click/key (browsers forbid sound before that).
-   The small equaliser icon mutes it, and a mute is remembered.
+   Plays for 15 seconds from the visitor's first tap/click/key (browsers forbid
+   sound before that), then fades out and stops. The small equaliser icon mutes it
+   (remembered) or plays another 15 seconds.
    ===================================================================== */
 const sound = (() => {
   const btn = document.getElementById('snd');
   let ctx = null, master, verb, droneFilter, windGain, white, twinkleTimer = null;
-  let on = false, wantOn = true, inside = false, lastPing = 0;
+  let on = false, wantOn = true, inside = false, lastPing = 0, played = false, stopTimer = null;
+  const PLAY_MS = 15000, FADE_S = 1.8;
   try { wantOn = localStorage.getItem('nak-sound') !== 'off'; } catch (e) {}
 
   function impulse(sec, decay) {
@@ -1358,10 +1361,11 @@ const sound = (() => {
   const out = node => { node.connect(master); node.connect(verb); };
 
   function build() {
-    ctx = new (window.AudioContext || window.webkitAudioContext)();
+    const AC = window.AudioContext || window.webkitAudioContext;
+    try { ctx = new AC({ latencyHint: 'playback' }); } catch (e) { ctx = new AC(); }
     master = ctx.createGain(); master.gain.value = 0; master.connect(ctx.destination);
-    verb = ctx.createConvolver(); verb.buffer = impulse(5.5, 2.4);
-    const wet = ctx.createGain(); wet.gain.value = 0.6; verb.connect(wet); wet.connect(master);
+    verb = ctx.createConvolver(); verb.buffer = impulse(2.8, 2.2);
+    const wet = ctx.createGain(); wet.gain.value = 0.75; verb.connect(wet); wet.connect(master);
     white = noise(3, false);
 
     // the drone: a low, open A chord drifting through a slowly breathing filter
@@ -1380,7 +1384,7 @@ const sound = (() => {
     const sg = ctx.createGain(); sg.gain.value = 170; sweep.connect(sg); sg.connect(droneFilter.frequency); sweep.start();
 
     // cosmic wind: brown noise through a wandering band-pass
-    const n = ctx.createBufferSource(); n.buffer = noise(8, true); n.loop = true;
+    const n = ctx.createBufferSource(); n.buffer = noise(4, true); n.loop = true;
     const bp = ctx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = 520; bp.Q.value = 0.9;
     const wl = ctx.createOscillator(); wl.frequency.value = 0.035;
     const wlg = ctx.createGain(); wlg.gain.value = 300; wl.connect(wlg); wlg.connect(bp.frequency); wl.start();
@@ -1432,16 +1436,16 @@ const sound = (() => {
   }
 
   function render() {
-    btn.classList.toggle('on', wantOn);
-    btn.setAttribute('aria-pressed', String(wantOn));
-    const label = wantOn ? 'Mute galaxy sound' : 'Play galaxy sound';
+    btn.classList.toggle('on', on);
+    btn.setAttribute('aria-pressed', String(on));
+    const label = on ? 'Mute galaxy sound' : 'Play galaxy sound';
     btn.setAttribute('aria-label', label);
     btn.title = label;
   }
   function setOn(v, remember) {
     wantOn = v;
     if (remember) { try { localStorage.setItem('nak-sound', v ? 'on' : 'off'); } catch (e) {} }
-    render();
+    clearTimeout(stopTimer);
     if (v) {
       // build + resume inside the gesture itself, and mark "on" right away so the
       // whoosh of the very click that woke the sound is heard too
@@ -1449,26 +1453,34 @@ const sound = (() => {
         if (!ctx) build();
         ctx.resume();
       } catch (e) { return; }
-      on = true;
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(0.9, ctx.currentTime, 0.9);
+      on = true; played = true;
+      const t = ctx.currentTime;
+      master.gain.cancelScheduledValues(t);
+      master.gain.setTargetAtTime(0.9, t, 0.9);
+      // fade out so it has fully gone quiet when the 15 seconds are up
+      master.gain.setTargetAtTime(0, t + PLAY_MS / 1000 - FADE_S, FADE_S / 4);
       clearTimeout(twinkleTimer); twinkleTimer = setTimeout(twinkle, 1200);
-    } else if (ctx) {
-      on = false;
-      clearTimeout(twinkleTimer);
-      master.gain.cancelScheduledValues(ctx.currentTime);
-      master.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
-      setTimeout(() => { if (!on) ctx.suspend(); }, 1200);
-    }
+      stopTimer = setTimeout(stop, PLAY_MS);
+    } else stop();
+    render();
+  }
+  function stop() {
+    on = false;
+    clearTimeout(twinkleTimer); clearTimeout(stopTimer);
+    render();
+    if (!ctx) return;
+    master.gain.cancelScheduledValues(ctx.currentTime);
+    master.gain.setTargetAtTime(0, ctx.currentTime, 0.2);
+    setTimeout(() => { if (!on) ctx.suspend(); }, 1200);
   }
 
-  btn.addEventListener('click', () => setOn(!wantOn, true));
-  // browsers only allow sound after a gesture, so the galaxy starts on the first tap, click or key
-  const wake = e => { if (wantOn && !on && !btn.contains(e.target)) setOn(true, false); };
+  btn.addEventListener('click', () => setOn(!on, true));
+  // browsers only allow sound after a gesture, so the galaxy starts on the first tap, click or key — once per visit
+  const wake = e => { if (wantOn && !played && !btn.contains(e.target)) setOn(true, false); };
   ['pointerdown', 'touchend', 'keydown'].forEach(t => addEventListener(t, wake, { capture: true }));
   document.addEventListener('visibilitychange', () => {
     if (!ctx) return;
-    if (document.hidden) ctx.suspend(); else if (on) ctx.resume();
+    if (document.hidden) { if (on) stop(); } else if (on) ctx.resume();
   });
   render();
 
